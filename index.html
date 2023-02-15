@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Socket.IO chat</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font: 16px Helvetica, Arial;
+    }
+
+    form {
+      bottom: 0;
+      width: 100%;
+    }
+
+    form input {
+      background-color: rgb(187, 235, 251);
+      border-radius: 22px;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      padding: 10px;
+      border: 0px;
+      width: 85%;
+      margin-right: 0.5%;
+      font-size: 16px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    form button {
+      width: 14%;
+      background: none;
+      border: none;
+      padding: 10px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    #conversation {
+      position: fixed;
+      padding: 3px;
+      bottom: 0;
+      width: 100%;
+    }
+
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #messages li {
+      padding: 5px 10px;
+    }
+
+    .fas {
+      transform: scale(1.6);
+    }
+
+    .fa-paper-plane {
+      color: rgb(187, 235, 251);
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/dcae80849e.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+  <div id="conversation">
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" name="input" autocomplete="off" /><button class="fas fa-paper-plane"></button>
+    </form>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script>
+
+    var socket = io();
+    let input = document.forms[0].elements["input"]
+    document.forms[0].addEventListener('submit', function (e) {
+
+      e.preventDefault(); // prevents page reloading
+      socket.emit('chat message', input.value);
+      input.value = "";
+      input.focus();
+      return false;
+
+    });
+
+    let texte = document.querySelector('#messages');
+
+    socket.on('chat message', function (msg) {
+      texte.appendChild(document.createElement("li")).innerText = msg
+    });
+  </script>
+
+
+</body>
+
+</html>
